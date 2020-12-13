@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
 
 const Putwitter = ({ putwitter, isOwner }) => {
   const [editing, setEditing] = useState(false);
@@ -10,6 +10,7 @@ const Putwitter = ({ putwitter, isOwner }) => {
     if (ok === true) {
       // delete
       await dbService.doc(`putwitter/${putwitter.id}`).delete();
+      await storageService.refFromURL(putwitter.attachmentURL).delete();
     }
   };
 

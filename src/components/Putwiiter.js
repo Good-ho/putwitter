@@ -50,6 +50,9 @@ const Putwitter = ({ putwitter, isOwner }) => {
       ) : (
         <>
           <h4>{putwitter.text}</h4>
+          {putwitter.attachmentURL && (
+            <img src={putwitter.attachmentURL} width="50px" height="50px" />
+          )}
           {isOwner && (
             <>
               <button onClick={onDeleteClick}>Delete</button>

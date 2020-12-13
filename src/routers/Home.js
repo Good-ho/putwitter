@@ -6,7 +6,7 @@ import Putwitter from "components/Putwiiter";
 const Home = ({ userObj }) => {
   const [inputText, setInputText] = useState("");
   const [putwitter, setPutwitter] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   //   const getPutwitter = async () => {
   //     const data = await dbService.collection("putwitter").get();
@@ -32,15 +32,26 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-    const response = await fileRef.putString(attachment, "data_url");
-    console.log(response);
-    // await dbService.collection("putwitter").add({
-    //   text: inputText,
-    //   createdAt: Date.now(),
-    //   creatorId: userObj.uid,
-    // });
+
+    let attachmentURL = "";
+
+    if (attachment !== "") {
+      const attachmentRef = storageService
+        .ref()
+        .child(`${userObj.uid}/${uuidv4()}`);
+      const response = await attachmentRef.putString(attachment, "data_url");
+      attachmentURL = await response.ref.getDownloadURL();
+    }
+
+    const putwitterObj = {
+      text: inputText,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentURL,
+    };
+    await dbService.collection("putwitter").add(putwitterObj);
     setInputText("");
+    setAttachment("");
   };
 
   const onChange = (event) => {
@@ -61,7 +72,7 @@ const Home = ({ userObj }) => {
       const {
         currentTarget: { result },
       } = finishedEvent;
-      console.log(result);
+
       setAttachment(result);
     };
     reader.readAsDataURL(theFile);

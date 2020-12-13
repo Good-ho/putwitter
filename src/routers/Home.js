@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
+import Putwitter from "components/Putwiiter";
 
 const Home = ({ userObj }) => {
   const [inputText, setInputText] = useState("");
@@ -59,9 +60,11 @@ const Home = ({ userObj }) => {
       <div>
         {putwitter &&
           putwitter.map((obj) => (
-            <div key={obj.id}>
-              <h4>{obj.text}</h4>
-            </div>
+            <Putwitter
+              key={obj.id}
+              putwitter={obj}
+              isOwner={userObj.uid === obj.creatorId}
+            />
           ))}
       </div>
     </div>

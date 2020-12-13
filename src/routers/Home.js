@@ -1,30 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "fbase";
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [inputText, setInputText] = useState("");
   const [putwitter, setPutwitter] = useState("");
 
-  const getPutwitter = async () => {
-    const data = await dbService.collection("putwitter").get();
-    data.forEach((document) => {
-      const puObject = {
-        ...document.data(),
-        id: document.id,
-      };
-      setPutwitter((prev) => [puObject, ...prev]);
-    });
-  };
+  //   const getPutwitter = async () => {
+  //     const data = await dbService.collection("putwitter").get();
+  //     data.forEach((document) => {
+  //       const puObject = {
+  //         ...document.data(),
+  //         id: document.id,
+  //       };
+  //       setPutwitter((prev) => [puObject, ...prev]);
+  //     });
+  //   };
 
   useEffect(() => {
-    getPutwitter();
+    // getPutwitter();
+    dbService.collection("putwitter").onSnapshot((snapshot) => {
+      const putwitterArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPutwitter(putwitterArray);
+    });
   }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     await dbService.collection("putwitter").add({
-      inputText,
+      text: inputText,
       createdAt: Date.now(),
+      creatorId: userObj.uid,
     });
     setInputText("");
   };
@@ -52,7 +60,7 @@ const Home = () => {
         {putwitter &&
           putwitter.map((obj) => (
             <div key={obj.id}>
-              <h4>{obj.inputText}</h4>
+              <h4>{obj.text}</h4>
             </div>
           ))}
       </div>

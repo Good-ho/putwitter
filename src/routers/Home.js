@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { dbService } from "fbase";
 
 const Home = () => {
   const [putwitter, setPutwitter] = useState("");
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
+    await dbService.collection("putwitter").add({
+      putwitter,
+      createdAt: Date.now(),
+    });
+    setPutwitter("");
   };
 
   const onChange = (event) => {

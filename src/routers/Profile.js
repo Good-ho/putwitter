@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { authService, dbService } from "fbase";
 import { useHistory } from "react-router-dom";
 
-const Profile = ({ userObj }) => {
+const Profile = ({ userObj, refreshUser }) => {
   const [profileValue, setProfileValue] = useState(userObj.displayName);
   const history = useHistory();
 
@@ -40,6 +40,7 @@ const Profile = ({ userObj }) => {
       await userObj.updateProfile({
         displayName: profileValue,
       });
+      refreshUser();
     }
   };
 

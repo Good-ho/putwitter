@@ -29,9 +29,9 @@ const Home = ({ userObj }) => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <PutwiiterFactory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {putwitter &&
           putwitter.map((obj) => (
             <Putwitter

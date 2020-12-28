@@ -37,7 +37,6 @@ function App() {
       ) : (
         "initalizing"
       )}
-      <footer>&copy; puTwitter {new Date().getFullYear()}</footer>
     </>
   );
 }
